@@ -2,6 +2,7 @@
 
 #include "Game.hpp"
 
+// TODO Probably to do that singleton or RAIIor sth 
 class TextureManager
 {
 public:
