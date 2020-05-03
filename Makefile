@@ -11,8 +11,8 @@ sdl_cflags := $(shell pkg-config --cflags sdl2)
 sdl_libs := $(shell pkg-config --libs sdl2)
 override CXXFLAGS += $(sdl_cflags)
 override LIBS += $(sdl_libs)
-all: main.cpp Game.cpp Game.hpp TextureManager.cpp TextureManager.h GameObject.hpp GameObject.cpp Map.hpp Map.cpp ECS.hpp Components.hpp
-	$(CPP) -std=c++17 -o outpoutsa main.cpp Game.cpp TextureManager.cpp GameObject.cpp Map.cpp $(LDFLAGS)
+all: main.cpp Game.cpp Game.hpp TextureManager.cpp TextureManager.h Map.hpp Map.cpp ECS/ECS.hpp ECS/Components.hpp ECS/SpriteComponent.hpp ECS/PositionComponent.hpp
+	$(CPP) -std=c++17 -o outpoutsa main.cpp Game.cpp TextureManager.cpp Map.cpp $(LDFLAGS)
 clean:
 	rm -f $(appname) *.o
 .PHONY: all clean

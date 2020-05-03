@@ -1,19 +1,13 @@
 #include "Game.hpp"
 #include "TextureManager.h"
-#include "GameObject.hpp"
 #include "Map.hpp"
+#include "ECS/Components.hpp"
 
-#include "ECS.hpp"
-#include "Components.hpp"
-
-GameObject* player;
-GameObject* enemy;
-Map* map;
-
+Map* map = nullptr;
 SDL_Renderer* Game::renderer = nullptr;
 
 Manager manager;
-auto &newPlayer(manager.AddEntity());
+auto &player(manager.AddEntity());
 
 Game::Game()
 {
@@ -22,6 +16,7 @@ Game::Game()
 Game::~Game()
 {
 }
+
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
 {
   int flags = 0;
@@ -52,11 +47,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     isRunning = false;
   }
   
-//  player = new GameObject("assets/player.png", 0, 0);
-//  make all of these smart pointers
-  enemy = new GameObject("assets/player2.png", 50 , 50);
-  newPlayer.AddComponent<PositionComponent>();
   map = new Map();
+  player.AddComponent<PositionComponent>(500, 500);
+  player.AddComponent<SpriteComponent>("assets/player.png");
 }
 
 void Game::handleEvents()
@@ -76,19 +69,13 @@ void Game::handleEvents()
 }
 void Game::update()
 {
-  if (player)
-  {
-    player->Update();
-  }
-  if (enemy)
-  {
-    enemy->Update();
-  }
-  
+  manager.Refresh();
   manager.Update();
-  std::cout << newPlayer.GetComponent<PositionComponent>().X() << " , "
-            << newPlayer.GetComponent<PositionComponent>().Y() << std::endl;
-  newPlayer.GetComponent<PositionComponent>();
+
+  if (player.GetComponent<PositionComponent>().X() > 100)
+  {
+    player.GetComponent<SpriteComponent>().SetTex("assets/player2.png");
+  }
 }
 
 void Game::render()
@@ -96,14 +83,7 @@ void Game::render()
   SDL_RenderClear(renderer);
   // this id where we would add stuff to render
   map->DrawMap();
-  if (player)
-  {
-    player->Render();
-  }
-  if (enemy)
-  {
-  enemy->Render();
-  }
+  manager.Draw();
   SDL_RenderPresent(renderer);
 }
 
