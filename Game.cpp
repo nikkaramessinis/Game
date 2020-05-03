@@ -1,10 +1,13 @@
 #include "Game.hpp"
 #include "TextureManager.h"
 #include "GameObject.hpp"
-
+#include "Map.hpp"
 
 GameObject* player;
 GameObject* enemy;
+Map* map;
+
+SDL_Renderer* Game::renderer = nullptr;
 
 Game::Game()
 {
@@ -30,7 +33,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
       std::cout << "Window created" << std::endl;
     }
 
-    renderer =SDL_CreateRenderer(window, -1, 0);
+    renderer = SDL_CreateRenderer(window, -1, 0);
     if (renderer)
     {
       SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -43,8 +46,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     isRunning = false;
   }
   
-//  player = new GameObject(renderer, "assets/player.png", 0, 0);
-  enemy = new GameObject(renderer, "assets/player2.png", 50 , 50);
+//  player = new GameObject("assets/player.png", 0, 0);
+//  make all of these smart pointers
+  enemy = new GameObject("assets/player2.png", 50 , 50);
+  map = new Map();
 }
 
 void Game::handleEvents()
@@ -75,7 +80,7 @@ void Game::render()
 {
   SDL_RenderClear(renderer);
   // this id where we would add stuff to render
-  
+  map->DrawMap();
   if (player)
   {
     player->Render();
