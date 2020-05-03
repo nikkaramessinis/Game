@@ -3,11 +3,17 @@
 #include "GameObject.hpp"
 #include "Map.hpp"
 
+#include "ECS.hpp"
+#include "Components.hpp"
+
 GameObject* player;
 GameObject* enemy;
 Map* map;
 
 SDL_Renderer* Game::renderer = nullptr;
+
+Manager manager;
+auto &newPlayer(manager.AddEntity());
 
 Game::Game()
 {
@@ -49,6 +55,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 //  player = new GameObject("assets/player.png", 0, 0);
 //  make all of these smart pointers
   enemy = new GameObject("assets/player2.png", 50 , 50);
+  newPlayer.AddComponent<PositionComponent>();
   map = new Map();
 }
 
@@ -73,7 +80,15 @@ void Game::update()
   {
     player->Update();
   }
-  enemy->Update();
+  if (enemy)
+  {
+    enemy->Update();
+  }
+  
+  manager.Update();
+  std::cout << newPlayer.GetComponent<PositionComponent>().X() << " , "
+            << newPlayer.GetComponent<PositionComponent>().Y() << std::endl;
+  newPlayer.GetComponent<PositionComponent>();
 }
 
 void Game::render()
