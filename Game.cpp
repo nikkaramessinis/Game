@@ -2,12 +2,18 @@
 #include "TextureManager.h"
 #include "Map.hpp"
 #include "ECS/Components.hpp"
+#include "Vector2D.hpp"
+#include <iostream>
+#include "Collision.h"
 
-Map* map = nullptr;
-SDL_Renderer* Game::renderer = nullptr;
-
+Map* map;
 Manager manager;
+
+SDL_Renderer* Game::renderer = nullptr;
+SDL_Event Game::event;
+
 auto &player(manager.AddEntity());
+auto &wall(manager.AddEntity());
 
 Game::Game()
 {
@@ -17,7 +23,7 @@ Game::~Game()
 {
 }
 
-void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
+void Game::init(const char* title, int width, int height, bool fullscreen)
 {
   int flags = 0;
   
@@ -25,15 +31,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
   {
     flags = SDL_WINDOW_FULLSCREEN;
   }
+  
   if(SDL_Init(SDL_INIT_EVERYTHING) == 0)
   {
-    std::cout << "Subsystems initialized ..." << std::endl;
-    window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
-    if (window)
-    {
-      std::cout << "Window created" << std::endl;
-    }
-
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
     renderer = SDL_CreateRenderer(window, -1, 0);
     if (renderer)
     {
@@ -48,20 +49,26 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
   }
   
   map = new Map();
-  player.AddComponent<PositionComponent>(500, 500);
-  player.AddComponent<SpriteComponent>("assets/player.png");
+  //ecs implementation
+  
+
+  player.AddComponent<TransformComponent>(0, 0);
+  player.AddComponent<SpriteComponent>("assets/player2.png");
+  player.AddComponent<KeyboardController>();
+  player.AddComponent<ColliderComponent>("player");
+  wall.AddComponent<TransformComponent>(300.0f,300.0f);
+  wall.AddComponent<SpriteComponent>("assets/dirt_0.png");
+  wall.AddComponent<ColliderComponent>("wall");
 }
 
 void Game::handleEvents()
 {
-  SDL_Event event;
   SDL_PollEvent(&event);
   switch (event.type)
   {
   case SDL_QUIT:
     isRunning = false;
-      break;
-      
+      break;      
   default:
     break;
   }
@@ -71,10 +78,11 @@ void Game::update()
 {
   manager.Refresh();
   manager.Update();
-
-  if (player.GetComponent<PositionComponent>().X() > 100)
+  std::cout << "before collision "<<std::endl;
+  if (Collision::AABB(player.GetComponent<ColliderComponent>().collider,
+  wall.GetComponent<ColliderComponent>().collider))
   {
-    player.GetComponent<SpriteComponent>().SetTex("assets/player2.png");
+    std::cout << "Collided " << std::endl;
   }
 }
 

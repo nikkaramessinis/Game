@@ -20,6 +20,7 @@ inline ComponentID GetComponentTypeID()
 
 template <typename T> inline ComponentID GetComponentTypeID() noexcept
 {
+  static_assert (std::is_base_of<Component, T>::value, "");
   static ComponentID typeID = GetComponentTypeID();
   return typeID;
 }
@@ -100,6 +101,7 @@ public:
     std::unique_ptr<Component> uPtr {c};
     components.emplace_back(std::move(uPtr));
     componentArray[GetComponentTypeID<T>()] = c;
+    std::cout << "addcomp "<<std::endl;
     componentBitSet[GetComponentTypeID<T>()] = true;
 
     c->Init();
