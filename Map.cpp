@@ -1,6 +1,5 @@
 #include "Map.hpp"
 #include "TextureManager.h"
-#include <iostream>
 
 //put this in a config file or json or sth
 int lvl1[20][25] = {

@@ -3,7 +3,7 @@
 #include "../Game.hpp"
 #include "ECS.hpp"
 #include "Components.hpp"
-#include "iostream"
+
 
 class KeyboardController : public Component
 {
@@ -22,7 +22,7 @@ public:
       switch (Game::event.key.keysym.sym)
       {
       case SDLK_w:
-        std::cout << "Key down "<<std::endl;
+//        std::cout << "Key down "<<std::endl;
         transform->velocity.y = -1;
         break;
       case SDLK_s:

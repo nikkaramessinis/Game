@@ -5,7 +5,7 @@
 #include <memory>
 #include <algorithm>
 #include <bitset>
-
+#include <array>
 
 class Component;
 class Entity;

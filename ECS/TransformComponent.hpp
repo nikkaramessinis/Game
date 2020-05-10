@@ -2,7 +2,7 @@
 
 #include "Components.hpp"
 #include "../Vector2D.hpp"
-#include "iostream"
+
 
 class TransformComponent : public Component
 {
@@ -22,8 +22,7 @@ public:
 
   TransformComponent(int sc)
   {
-    position.x = 0.0f;
-    position.y = 0.0f;
+    position.Zero();
     scale = sc;
   }
 
@@ -44,14 +43,13 @@ public:
   
   void change() 
   {
-    std::cout << "called this" <<std::endl;
+//    std::cout << "called this" <<std::endl;
     velocity.x = 1;
   }
   
   void Init() override
   {
-    velocity.x = 0;
-    velocity.y = 0;
+    velocity.Zero();
   }
   
   void Update() override

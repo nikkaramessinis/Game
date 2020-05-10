@@ -10,7 +10,7 @@ int main(int argc, const char* argv[]) {
 
   Uint32 frameStart;
   int frameTime;
-  
+
   game = std::make_unique<Game>();
   game->init("KaramEngine" , 800, 600, false);
   while (game->running())

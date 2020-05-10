@@ -3,7 +3,6 @@
 #include "Map.hpp"
 #include "ECS/Components.hpp"
 #include "Vector2D.hpp"
-#include <iostream>
 #include "Collision.h"
 
 Map* map;
@@ -12,8 +11,14 @@ Manager manager;
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
+std::vector<ColliderComponent*> Game::colliders;
+
 auto &player(manager.AddEntity());
 auto &wall(manager.AddEntity());
+
+auto &tile0(manager.AddEntity());
+auto &tile1(manager.AddEntity());
+auto &tile2(manager.AddEntity());
 
 Game::Game()
 {
@@ -39,7 +44,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
     if (renderer)
     {
       SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-      std::cout << "Renderer created ..." << std::endl;
+      // std::cout << "Renderer created ..." << std::endl;
     }
     isRunning = true;
   }
@@ -52,6 +57,13 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
   //ecs implementation
   
 
+  tile0.AddComponent<TileComponent>(200, 200, 32, 32, 0);
+  tile1.AddComponent<TileComponent>(250 , 250 , 32, 32, 1);
+  tile1.AddComponent<ColliderComponent>("dirt");
+  tile2.AddComponent<TileComponent>(150, 150 , 32, 32, 2);
+  tile2.AddComponent<ColliderComponent>("grass");
+  
+  
   player.AddComponent<TransformComponent>(0, 0);
   player.AddComponent<SpriteComponent>("assets/player2.png");
   player.AddComponent<KeyboardController>();
@@ -78,11 +90,10 @@ void Game::update()
 {
   manager.Refresh();
   manager.Update();
-  std::cout << "before collision "<<std::endl;
-  if (Collision::AABB(player.GetComponent<ColliderComponent>().collider,
-  wall.GetComponent<ColliderComponent>().collider))
+//  std::cout << "before collision "<<std::endl;
+  for (auto cc : colliders)
   {
-    std::cout << "Collided " << std::endl;
+    Collision::AABB(player.GetComponent<ColliderComponent>(), *cc);
   }
 }
 
@@ -90,7 +101,7 @@ void Game::render()
 {
   SDL_RenderClear(renderer);
   // this id where we would add stuff to render
-  map->DrawMap();
+  //map->DrawMap();
   manager.Draw();
   SDL_RenderPresent(renderer);
 }
@@ -100,5 +111,5 @@ void Game::clean()
   SDL_DestroyWindow(window);
   SDL_DestroyRenderer(renderer);
   SDL_Quit();
-  std::cout << "Game Cleaned ..." << std::endl;
+//  std::cout << "Game Cleaned ..." << std::endl;
 }
