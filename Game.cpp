@@ -16,10 +16,6 @@ std::vector<ColliderComponent*> Game::colliders;
 auto &player(manager.AddEntity());
 auto &wall(manager.AddEntity());
 
-auto &tile0(manager.AddEntity());
-auto &tile1(manager.AddEntity());
-auto &tile2(manager.AddEntity());
-
 Game::Game()
 {
 }
@@ -55,14 +51,8 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
   
   map = new Map();
   //ecs implementation
-  
 
-  tile0.AddComponent<TileComponent>(200, 200, 32, 32, 0);
-  tile1.AddComponent<TileComponent>(250 , 250 , 32, 32, 1);
-  tile1.AddComponent<ColliderComponent>("dirt");
-  tile2.AddComponent<TileComponent>(150, 150 , 32, 32, 2);
-  tile2.AddComponent<ColliderComponent>("grass");
-  
+  Map::LoadMap("assets/p16x16.map", 16, 16);
   
   player.AddComponent<TransformComponent>(0, 0);
   player.AddComponent<SpriteComponent>("assets/player2.png");
@@ -101,7 +91,6 @@ void Game::render()
 {
   SDL_RenderClear(renderer);
   // this id where we would add stuff to render
-  //map->DrawMap();
   manager.Draw();
   SDL_RenderPresent(renderer);
 }
@@ -112,4 +101,9 @@ void Game::clean()
   SDL_DestroyRenderer(renderer);
   SDL_Quit();
 //  std::cout << "Game Cleaned ..." << std::endl;
+}
+void Game::AddTile(int id, int x, int y)
+{
+  auto& tile(manager.AddEntity());
+  tile.AddComponent<TileComponent>(x, y, 32, 32, id);
 }
