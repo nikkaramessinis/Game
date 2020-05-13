@@ -11,7 +11,7 @@ sdl_cflags := $(shell pkg-config --cflags sdl2)
 sdl_libs := $(shell pkg-config --libs sdl2)
 override CXXFLAGS += $(sdl_cflags)
 override LIBS += $(sdl_libs)
-all: main.cpp Game.cpp Game.hpp TextureManager.cpp TextureManager.h Map.hpp Map.cpp GameObject.hpp GameObject.cpp ECS/ECS.hpp ECS/ECS.cpp ECS/Components.hpp ECS/SpriteComponent.hpp ECS/TransformComponent.hpp Vector2D.hpp Vector2D.cpp ECS/KeyboardController.hpp Collision.h Collision.cpp ECS/ColliderComponent.hpp ECS/TileComponent.hpp
+all: main.cpp Game.cpp Game.hpp TextureManager.cpp TextureManager.h Map.hpp Map.cpp GameObject.hpp GameObject.cpp ECS/ECS.hpp ECS/ECS.cpp ECS/Components.hpp ECS/SpriteComponent.hpp ECS/TransformComponent.hpp Vector2D.hpp Vector2D.cpp ECS/KeyboardController.hpp Collision.h Collision.cpp ECS/ColliderComponent.hpp ECS/TileComponent.hpp ECS/Animation.hpp
 	$(CPP) -std=c++17 -g -o outpoutsa main.cpp Game.cpp TextureManager.cpp Map.cpp Vector2D.cpp GameObject.cpp Collision.cpp ECS/ECS.cpp $(LDFLAGS)
 clean:
 	rm -f $(appname) *.o

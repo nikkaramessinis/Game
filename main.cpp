@@ -12,14 +12,14 @@ int main(int argc, const char* argv[]) {
   int frameTime;
 
   game = std::make_unique<Game>();
-  game->init("KaramEngine" , 800, 600, false);
-  while (game->running())
+  game->Init("KaramEngine" , 800, 600, false);
+  while (game->Running())
   {
     frameStart = SDL_GetTicks();
     
-    game->handleEvents();  
-    game->update();  
-    game->render();
+    game->HandleEvents();  
+    game->Update();  
+    game->Render();
 
     // How long the frame has taken
     frameTime = SDL_GetTicks() - frameStart;
@@ -30,6 +30,6 @@ int main(int argc, const char* argv[]) {
     }
     
   }
-  game->clean();
+  game->Clean();
   return 0;
 }

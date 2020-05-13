@@ -14,23 +14,23 @@ public:
   Game();
   ~Game();
 
-  void init(const char* title, int width, int height, bool fullscreen);
+  void Init(const char* title, int width, int height, bool fullscreen);
   
-  void handleEvents();
+  void HandleEvents();
   
-  void update();
+  void Update();
   
-  void render();
+  void Render();
   
   //Memory management
-  void clean();
+  void Clean();
 
-  bool running()
+  bool Running()
   {
     return isRunning;
   }
 
-  static void AddTile(int id, int x, int y);
+  static void AddTile(int srcX, int srcY, int xpos, int ypos);
   static SDL_Renderer *renderer;
   static SDL_Event event;
   static std::vector<ColliderComponent*> colliders;

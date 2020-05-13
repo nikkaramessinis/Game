@@ -16,6 +16,7 @@ std::vector<ColliderComponent*> Game::colliders;
 auto &player(manager.AddEntity());
 auto &wall(manager.AddEntity());
 
+const char* mapFile = "assets/terrain_ss.png";
 enum groupLabels : std::size_t
 {
   groupMap,
@@ -32,7 +33,7 @@ Game::~Game()
 {
 }
 
-void Game::init(const char* title, int width, int height, bool fullscreen)
+void Game::Init(const char* title, int width, int height, bool fullscreen)
 {
   int flags = 0;
   
@@ -60,20 +61,17 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
   map = new Map();
   //ecs implementation
 
-  Map::LoadMap("assets/p16x16.map", 16, 16);
+  Map::LoadMap("assets/map.map", 25, 20);
   
-  player.AddComponent<TransformComponent>(0, 0);
-  player.AddComponent<SpriteComponent>("assets/player2.png");
+  player.AddComponent<TransformComponent>(2);
+  player.AddComponent<SpriteComponent>("assets/player.png", true);
   player.AddComponent<KeyboardController>();
   player.AddComponent<ColliderComponent>("player");
   player.AddGroup(groupPlayers);
-  wall.AddComponent<TransformComponent>(300.0f,300.0f);
-  wall.AddComponent<SpriteComponent>("assets/dirt_0.png");
-  wall.AddComponent<ColliderComponent>("wall");
-  wall.AddGroup(groupMap);
+ 
 }
 
-void Game::handleEvents()
+void Game::HandleEvents()
 {
   SDL_PollEvent(&event);
   switch (event.type)
@@ -86,7 +84,7 @@ void Game::handleEvents()
   }
   
 }
-void Game::update()
+void Game::Update()
 {
   manager.Refresh();
   manager.Update();
@@ -100,7 +98,7 @@ void Game::update()
 auto& tiles(manager.GetGroup(groupMap));
 auto& players(manager.GetGroup(groupPlayers));
 auto& enemies(manager.GetGroup(groupEnemies));
-void Game::render()
+void Game::Render()
 {
   SDL_RenderClear(renderer);
   // this id where we would add stuff to render
@@ -119,16 +117,16 @@ void Game::render()
   SDL_RenderPresent(renderer);
 }
 
-void Game::clean()
+void Game::Clean()
 {
   SDL_DestroyWindow(window);
   SDL_DestroyRenderer(renderer);
   SDL_Quit();
 //  std::cout << "Game Cleaned ..." << std::endl;
 }
-void Game::AddTile(int id, int x, int y)
+void Game::AddTile(int srcX,int srcY, int xpos, int ypos)
 {
   auto& tile(manager.AddEntity());
-  tile.AddComponent<TileComponent>(x, y, 32, 32, id);
+  tile.AddComponent<TileComponent>(srcX, srcY, xpos, ypos, mapFile);
   tile.AddGroup(groupMap);
 }
