@@ -13,25 +13,9 @@ SDL_Event Game::event;
 
 SDL_Rect Game::camera = {0,0,800, 640};
 
-std::vector<ColliderComponent*> Game::colliders;
 bool Game::isRunning = false;
 
 auto &player(manager.AddEntity());
-auto &wall(manager.AddEntity());
-
-const char* mapFile = "assets/terrain_ss.png";
-enum groupLabels : std::size_t
-{
-  groupMap,
-  groupPlayers,
-  groupEnemies,
-  groupColliders
-};
-
-
-auto& tiles(manager.GetGroup(groupMap));
-auto& players(manager.GetGroup(groupPlayers));
-auto& enemies(manager.GetGroup(groupEnemies));
 
 Game::Game()
 {
@@ -66,18 +50,22 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
     isRunning = false;
   }
   
-  map = new Map();
+  map = new Map("assets/terrain_ss.png", 3, 32);
   //ecs implementation
 
-  Map::LoadMap("assets/map.map", 25, 20);
+  map->LoadMap("assets/map.map", 25, 20);
   
   player.AddComponent<TransformComponent>(2);
   player.AddComponent<SpriteComponent>("assets/player.png", true);
   player.AddComponent<KeyboardController>();
   player.AddComponent<ColliderComponent>("player");
-  player.AddGroup(groupPlayers);
+  player.AddGroup(Game::groupPlayers);
  
 }
+
+auto& tiles(manager.GetGroup(Game::groupMap));
+auto& players(manager.GetGroup(Game::groupPlayers));
+auto& colliders(manager.GetGroup(Game::groupColliders));
 
 void Game::HandleEvents()
 {
@@ -94,8 +82,20 @@ void Game::HandleEvents()
 }
 void Game::Update()
 {
+  SDL_Rect playerCol = player.GetComponent<ColliderComponent>().collider;
+  Vector2D playerPos = player.GetComponent<TransformComponent>().position;
+  
   manager.Refresh();
   manager.Update();
+
+  for(auto& c : colliders)
+  {
+    SDL_Rect cCol = c->GetComponent<ColliderComponent>().collider;
+    if (Collision::AABB(cCol, playerCol))
+    {
+      player.GetComponent<TransformComponent>().position = playerPos;
+    }
+  }
 //  std::cout << "before collision "<<std::endl;
   camera.x = player.GetComponent<TransformComponent>().position.x - 400;
   camera.y = player.GetComponent<TransformComponent>().position.y - 320;
@@ -127,14 +127,17 @@ void Game::Render()
   {
     t->Draw();
   }
+
+  for (auto& c : colliders)
+  {
+    c->Draw();
+  }
+  
   for (auto& p : players)
   {
     p->Draw();
   }
-  for (auto& e : enemies)
-  {
-    e->Draw();
-  }
+  
   SDL_RenderPresent(renderer);
 }
 
@@ -144,10 +147,4 @@ void Game::Clean()
   SDL_DestroyRenderer(renderer);
   SDL_Quit();
 //  std::cout << "Game Cleaned ..." << std::endl;
-}
-void Game::AddTile(int srcX,int srcY, int xpos, int ypos)
-{
-  auto& tile(manager.AddEntity());
-  tile.AddComponent<TileComponent>(srcX, srcY, xpos, ypos, mapFile);
-  tile.AddGroup(groupMap);
 }
