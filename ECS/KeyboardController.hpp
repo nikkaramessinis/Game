@@ -66,6 +66,8 @@ public:
         sprite->spriteFlip = SDL_FLIP_NONE;
         sprite->Play("Idle");
         break;
+      case SDLK_ESCAPE:
+        Game::isRunning = false;
       default:
         break;
       }
