@@ -1,4 +1,4 @@
-#include "TextureManager.h"
+#include "TextureManager.hpp"
 
 SDL_Texture* TextureManager::LoadTexture(const char* texture)
 {
@@ -6,7 +6,7 @@ SDL_Texture* TextureManager::LoadTexture(const char* texture)
   SDL_Texture* tex = SDL_CreateTextureFromSurface(Game::renderer, tempSurface);
   if(!tex)
   {
-    std::cout << "Couldn't load texture" << std::endl;
+    std::cout << "Couldn't load texture" << texture << std::endl;
   }
   SDL_FreeSurface(tempSurface);
   return tex;

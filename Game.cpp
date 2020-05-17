@@ -1,9 +1,10 @@
 #include "Game.hpp"
-#include "TextureManager.h"
+#include "TextureManager.hpp"
 #include "Map.hpp"
 #include "ECS/Components.hpp"
 #include "Vector2D.hpp"
-#include "Collision.h"
+#include "Collision.hpp"
+#include "AssetManager.hpp"
 
 Map* map;
 Manager manager;
@@ -13,9 +14,12 @@ SDL_Event Game::event;
 
 SDL_Rect Game::camera = {0,0,800, 640};
 
+AssetManager* Game::assets = new AssetManager(&manager);
+
 bool Game::isRunning = false;
 
 auto &player(manager.AddEntity());
+auto &label(manager.AddEntity());
 
 Game::Game()
 {
@@ -49,23 +53,44 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
   {
     isRunning = false;
   }
+
+  if (TTF_Init() == -1)
+  {
+    std::cout << "Error : SDL_TTF " << std::endl;
+  }
   
-  map = new Map("assets/terrain_ss.png", 3, 32);
+  assets->AddTexture("terrain", "assets/terrain_ss.png");
+  assets->AddTexture("player", "assets/player.png");
+  assets->AddTexture("projectile", "assets/proj.png");
+  
+  assets->AddFont("Georgia", "assets/georgia.ttf", 16);
+  
+  map = new Map("terrain", 3, 32);
   //ecs implementation
 
   map->LoadMap("assets/map.map", 25, 20);
   
   player.AddComponent<TransformComponent>(2);
-  player.AddComponent<SpriteComponent>("assets/player.png", true);
+  player.AddComponent<SpriteComponent>("player", true);
   player.AddComponent<KeyboardController>();
   player.AddComponent<ColliderComponent>("player");
   player.AddGroup(Game::groupPlayers);
+
+  SDL_Color white = {255, 255, 255, 255};
+  label.AddComponent<UILabel>(10, 10, "Test String", "Georgia", white);
+  
+  assets->CreateProjectile(Vector2D(600, 640),Vector2D(2, 0), 200, 1, "projectile");
+  assets->CreateProjectile(Vector2D(600, 600),Vector2D(2, 0), 200, 1, "projectile");
+  assets->CreateProjectile(Vector2D(620, 610),Vector2D(2, 1), 200, 1, "projectile");
+  assets->CreateProjectile(Vector2D(680, 620),Vector2D(2, -1), 200, 1, "projectile");
+  assets->CreateProjectile(Vector2D(670, 600),Vector2D(2, 0), 200, 1, "projectile");
  
 }
 
 auto& tiles(manager.GetGroup(Game::groupMap));
 auto& players(manager.GetGroup(Game::groupPlayers));
 auto& colliders(manager.GetGroup(Game::groupColliders));
+auto& projectiles(manager.GetGroup(Game::groupProjectiles));
 
 void Game::HandleEvents()
 {
@@ -94,6 +119,15 @@ void Game::Update()
     if (Collision::AABB(cCol, playerCol))
     {
       player.GetComponent<TransformComponent>().position = playerPos;
+    }
+  }
+
+  for (auto& p : projectiles)
+  {
+    if (Collision ::AABB(player.GetComponent<ColliderComponent>().collider,p->GetComponent<ColliderComponent>().collider))
+    {
+      std::cout << "Hit player "<<std::endl;
+      p->Destroy();
     }
   }
 //  std::cout << "before collision "<<std::endl;
@@ -137,7 +171,13 @@ void Game::Render()
   {
     p->Draw();
   }
-  
+
+  for (auto& p: projectiles)
+  {
+    p->Draw();
+  }
+
+  label.Draw();
   SDL_RenderPresent(renderer);
 }
 

@@ -3,9 +3,10 @@
 #include "Components.hpp"
 #include "SDL2/SDL.h"
 #include <iostream>
-#include "../TextureManager.h"
+#include "../TextureManager.hpp"
 #include "Animation.hpp"
 #include <map>
+#include "../AssetManager.hpp"
 
 class SpriteComponent : public Component
 {
@@ -25,12 +26,12 @@ public:
   SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
   
   SpriteComponent() = default;
-  SpriteComponent(const char* path)
+  SpriteComponent(std::string id)
   {
-    SetTex(path);
+    SetTex(id);
   }
 
-  SpriteComponent(const char* path, bool isAnimated)
+  SpriteComponent(std::string id, bool isAnimated)
   {
     animated = isAnimated;
     Animation idle = Animation(0, 4, 100);
@@ -41,17 +42,12 @@ public:
     animations.emplace("Walk", walk);
 
     Play("Idle");
-    SetTex(path);
+    SetTex(id);
   }
   
-  void SetTex(const char* path)
+  void SetTex(std::string id)
   {
-    texture = TextureManager::LoadTexture(path);
-    if (texture)
-    {
-      std::cout << "Failed to load texture"<<std::endl;
-      exit;
-    }
+    texture = Game::assets->GetTexture(id);
   }
   
   void Init() override
@@ -93,7 +89,6 @@ public:
   }
   ~SpriteComponent()
   {
-    SDL_DestroyTexture(texture);
   }
 
 };

@@ -1,4 +1,4 @@
-#include "Collision.h"
+#include "Collision.hpp"
 #include "ECS/ColliderComponent.hpp"
 
 

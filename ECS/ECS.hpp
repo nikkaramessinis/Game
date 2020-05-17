@@ -124,7 +124,7 @@ public:
     std::unique_ptr<Component> uPtr {c};
     components.emplace_back(std::move(uPtr));
     componentArray[GetComponentTypeID<T>()] = c;
-    std::cout << "addcomp "<<std::endl;
+    //std::cout << "addcomp "<< GetComponentTypeID<T>() <<std::endl;
     componentBitSet[GetComponentTypeID<T>()] = true;
 
     c->Init();

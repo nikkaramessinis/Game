@@ -1,5 +1,5 @@
 #include "Map.hpp"
-#include "TextureManager.h"
+#include "TextureManager.hpp"
 #include "ECS/ECS.hpp"
 #include "ECS/Components.hpp"
 #include <fstream>
@@ -7,7 +7,7 @@
 
 extern Manager manager;
 
-Map::Map(const char* mfp, int ms, int ts) : mapFilePath(mfp), mapScale(ms), tileSize(ts)
+Map::Map(std::string tid, int ms, int ts) : textID(tid), mapScale(ms), tileSize(ts)
 {
   scaledSize = ms * ts;
 }
@@ -62,6 +62,6 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 void Map::AddTile(int srcX, int srcY, int xpos, int ypos)
 {
   auto& tile(manager.AddEntity());
-  tile.AddComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, mapScale, mapFilePath);
+  tile.AddComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, mapScale, textID);
   tile.AddGroup(Game::groupMap);
 }

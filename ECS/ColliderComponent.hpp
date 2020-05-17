@@ -32,7 +32,7 @@ public:
     {
       entity->AddComponent<TransformComponent>();
     }
-    std::cout << "getcomp collider"<<std::endl;
+    //std::cout << "getcomp collider"<<std::endl;
     transform = &entity->GetComponent<TransformComponent>();
 
     tex = TextureManager::LoadTexture("assets/ColTex.png");
