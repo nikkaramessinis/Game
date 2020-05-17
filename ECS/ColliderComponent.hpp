@@ -59,8 +59,8 @@ public:
 
   void Draw() override
   {
-    TextureManager::Draw(tex, srcR, destR, SDL_FLIP_NONE);
-
+   //Draw borders for debugging
+   //    TextureManager::Draw(tex, srcR, destR, SDL_FLIP_NONE);
   }
 
 };

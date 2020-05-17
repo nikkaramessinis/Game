@@ -20,7 +20,7 @@ public:
   
   TileComponent(int srcX, int srcY, int xpos, int ypos, int tsize, int tscale, std::string id)
   {
-    std::cout << __LINE__ <<std::endl;
+    std::cout << __FUNCTION__ <<__LINE__ <<std::endl;
     texture = Game::assets->GetTexture(id);
     
     position.x = xpos;

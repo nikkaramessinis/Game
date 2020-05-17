@@ -5,6 +5,7 @@
 #include "Vector2D.hpp"
 #include "Collision.hpp"
 #include "AssetManager.hpp"
+#include <sstream>
 
 Map* map;
 Manager manager;
@@ -12,7 +13,7 @@ Manager manager;
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
-SDL_Rect Game::camera = {0,0,800, 640};
+SDL_Rect Game::camera = {0,0,1600, 1280};
 
 AssetManager* Game::assets = new AssetManager(&manager);
 
@@ -79,11 +80,11 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
   SDL_Color white = {255, 255, 255, 255};
   label.AddComponent<UILabel>(10, 10, "Test String", "Georgia", white);
   
-  assets->CreateProjectile(Vector2D(600, 640),Vector2D(2, 0), 200, 1, "projectile");
-  assets->CreateProjectile(Vector2D(600, 600),Vector2D(2, 0), 200, 1, "projectile");
-  assets->CreateProjectile(Vector2D(620, 610),Vector2D(2, 1), 200, 1, "projectile");
-  assets->CreateProjectile(Vector2D(680, 620),Vector2D(2, -1), 200, 1, "projectile");
-  assets->CreateProjectile(Vector2D(670, 600),Vector2D(2, 0), 200, 1, "projectile");
+  //assets->CreateProjectile(Vector2D(600, 640),Vector2D(2, 0), 200, 1, "projectile");
+  //assets->CreateProjectile(Vector2D(600, 600),Vector2D(2, 0), 200, 1, "projectile");
+  //assets->CreateProjectile(Vector2D(620, 610),Vector2D(2, 1), 200, 1, "projectile");
+  //assets->CreateProjectile(Vector2D(680, 620),Vector2D(2, -1), 200, 1, "projectile");
+  //assets->CreateProjectile(Vector2D(670, 600),Vector2D(2, 0), 200, 1, "projectile");
  
 }
 
@@ -105,10 +106,15 @@ void Game::HandleEvents()
   }
   
 }
+
 void Game::Update()
 {
   SDL_Rect playerCol = player.GetComponent<ColliderComponent>().collider;
   Vector2D playerPos = player.GetComponent<TransformComponent>().position;
+
+  std::stringstream ss;
+  ss << "Player position : " << playerPos << std::endl;
+  label.GetComponent<UILabel>().SetLabelText(ss.str(), "Georgia");
   
   manager.Refresh();
   manager.Update();
@@ -130,24 +136,30 @@ void Game::Update()
       p->Destroy();
     }
   }
-//  std::cout << "before collision "<<std::endl;
+  
+  //  std::cout << "before collision "<<std::endl;
   camera.x = player.GetComponent<TransformComponent>().position.x - 400;
   camera.y = player.GetComponent<TransformComponent>().position.y - 320;
-
+  
   if (camera.x < 0)
   {
+    std::cout << "Camera.x" << camera.x;
     camera.x = 0;
   }
+  
   if (camera.y < 0)
   {
-    camera.y =0;
+    std::cout << "Camera.y < 0";
+    camera.y = 0;
   }
   if (camera.x > camera.w)
   {
+    std::cout << "Camera.x "<< camera.x  <<" w "<< camera.w;
     camera.x = camera.w;
   }
   if (camera.y > camera.h)
   {
+    std::cout << "Camera.y "<<camera.y  <<" h "<< camera.h;
     camera.y = camera.h; 
   }
 

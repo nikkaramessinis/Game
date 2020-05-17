@@ -34,12 +34,19 @@ public:
   SpriteComponent(std::string id, bool isAnimated)
   {
     animated = isAnimated;
-    Animation idle = Animation(0, 4, 100);
-    Animation walk = Animation(2, 4, 100);
+    Animation idle = Animation(0, 1, 100);
+    Animation walkright = Animation(2, 4, 100);
+    Animation walkdownwards = Animation(0, 4, 100);
+    std::cout << __FUNCTION__ << __LINE__ << std::endl;
+    Animation walkbackwards = Animation(3, 4, 100);
+    std::cout << __FUNCTION__ << __LINE__ << std::endl;
 
     
     animations.emplace("Idle", idle);
-    animations.emplace("Walk", walk);
+    animations.emplace("WalkRight", walkright);
+    animations.emplace("WalkBackwards", walkbackwards);
+    animations.emplace("WalkDownwards", walkdownwards);
+    std::cout << __FUNCTION__ << __LINE__ << std::endl;
 
     Play("Idle");
     SetTex(id);
@@ -63,7 +70,7 @@ public:
 
   void Update() override
   {
-    if (animated)
+    if (animated && speed > 0)
     {
       srcRect.x = srcRect.w * static_cast<int>((SDL_GetTicks() / speed) % frames);
     }

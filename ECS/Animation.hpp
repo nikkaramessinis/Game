@@ -9,6 +9,7 @@ struct Animation
 
   Animation()
   {
+    
   }
 
   Animation(int i, int f, int s)

@@ -26,19 +26,19 @@ public:
       case SDLK_w:
 //        std::cout << "Key down "<<std::endl;
         transform->velocity.y = -1;
-        sprite->Play("Walk");
+        sprite->Play("WalkBackwards");
         break;
       case SDLK_s:
         transform->velocity.y = 1;
-        sprite->Play("Walk");
+        sprite->Play("WalkDownwards");
         break;
       case SDLK_d:
         transform->velocity.x = 1;
-        sprite->Play("Walk");
+        sprite->Play("WalkRight");
         break;
       case SDLK_a:
         transform->velocity.x = -1;
-        sprite->Play("Walk");
+        sprite->Play("WalkRight");
         sprite->spriteFlip = SDL_FLIP_HORIZONTAL;
         break;
       default:
