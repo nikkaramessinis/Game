@@ -143,23 +143,23 @@ void Game::Update()
   
   if (camera.x < 0)
   {
-    std::cout << "Camera.x" << camera.x;
+    //std::cout << "Camera.x" << camera.x;
     camera.x = 0;
   }
   
   if (camera.y < 0)
   {
-    std::cout << "Camera.y < 0";
+    //std::cout << "Camera.y < 0";
     camera.y = 0;
   }
   if (camera.x > camera.w)
   {
-    std::cout << "Camera.x "<< camera.x  <<" w "<< camera.w;
+    //std::cout << "Camera.x "<< camera.x  <<" w "<< camera.w;
     camera.x = camera.w;
   }
   if (camera.y > camera.h)
   {
-    std::cout << "Camera.y "<<camera.y  <<" h "<< camera.h;
+    //std::cout << "Camera.y "<<camera.y  <<" h "<< camera.h;
     camera.y = camera.h; 
   }
 

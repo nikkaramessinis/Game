@@ -90,9 +90,17 @@ public:
 
   void Play(const char * animName)
   {
-    frames = animations[animName].frames;
-    animIndex = animations[animName].index;
-    speed = animations[animName].speed;
+    auto it = animations.find(animName); 
+    if(it != animations.end())
+    {
+      auto selectedAnim =  it->second;
+      frames = selectedAnim.frames;
+      animIndex = selectedAnim.index;
+      speed = selectedAnim.speed;
+      return;
+    }
+    std::cout<< __FUNCTION__ << " couldn't find animation "<< animName 
+             << " check the name or add it in the container first"<<std::endl;
   }
   ~SpriteComponent()
   {

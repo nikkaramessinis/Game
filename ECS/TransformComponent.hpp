@@ -2,6 +2,7 @@
 
 #include "Components.hpp"
 #include "../Vector2D.hpp"
+#include <cmath>
 
 
 class TransformComponent : public Component
@@ -55,8 +56,15 @@ public:
   
   void Update() override
   {
-    position.x += velocity.x * speed;
-    position.y += velocity.y * speed;
+    float velx, vely;
+    //pes oti douleuei alla dn douleuei h kateuthunsh isws ena * sto telos me kateuthunsh alla to allo einai / kati 
+    velx = velocity.x/sqrt(1 + (velocity.y)*(velocity.y));
+//    std::cout << "vel.x "<< velx <<std::endl;
+    vely = velocity.y/sqrt(1+  + (velocity.x)*(velocity.x));
+    //  std::cout << "vel.y "<< vely <<std::endl;
+    
+    position.x += velx * speed;
+    position.y += vely * speed;
   }
 };
 
