@@ -1,4 +1,3 @@
-#Pokemon Type Game
 Title: 2D RPG Game with Sprite Manager, Animation Manager, Collision Detection ,
 Keyboard Controller, TileMap Load.
 
